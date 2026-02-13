@@ -135,6 +135,11 @@ public class PairingHeap<T> where T: IComparable<T>
         return oldRoot;
     }
 
+    public Node<T> FindMin()
+    {
+        return Root;
+    }
+
     /// <summary>
     /// Update the value of the node passed and rebuild the heap if needed.
     /// </summary>
