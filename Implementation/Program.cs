@@ -1,4 +1,4 @@
-﻿using Implementation.Algorithms;
+using Implementation.Algorithms;
 
 namespace Implementation;
 
