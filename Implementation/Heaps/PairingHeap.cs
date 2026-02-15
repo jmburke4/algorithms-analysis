@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
+namespace Implementation.Heaps;
+
 /// <summary>
 /// A pairing heap implementation.
 /// <para>
