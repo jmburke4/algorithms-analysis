@@ -1,4 +1,5 @@
 using System;
+using Implementation.Heaps;
 
 namespace Implementation;
 
@@ -20,7 +21,7 @@ public static class PairHeapTest
         var failed = 0;
 
         RunInsertAndFindMin(ref testNumber, ref passed, ref failed);
-        RunDeleteMin(ref testNumber, ref passed, ref failed);
+        RunExtractMin(ref testNumber, ref passed, ref failed);
         RunDecreaseKey(ref testNumber, ref passed, ref failed);
         RunCombined(ref testNumber, ref passed, ref failed);
         RunEmptyDeleteMinThrows(ref testNumber, ref passed, ref failed);
@@ -32,7 +33,7 @@ public static class PairHeapTest
         Console.WriteLine(failed == 0 ? "All tests passed." : "Some tests failed.");
     }
 
-    /// <summary>
+   /// <summary>
     /// Record a passing test and print "Test # - &lt;description&gt; - Passed".
     /// </summary>
     /// <param name="testNumber">Current test index (incremented)</param>
@@ -70,7 +71,7 @@ public static class PairHeapTest
         var heap = new PairingHeap<int>();
 
         // FindMin on empty heap should return null
-        if (heap.FindMin() != null)
+        if (heap.FindMin() != default(int))
         {
             Fail(ref testNumber, "FindMin on empty heap returns null", "expected null, got non-null", ref failed);
             return;
@@ -79,9 +80,9 @@ public static class PairHeapTest
 
         var n5 = heap.Insert(5);
         var min = heap.FindMin();
-        if (min == null || min.Value != 5)
+        if (min == default(int) || min != 5)
         {
-            Fail(ref testNumber, "FindMin after single insert returns 5", $"expected 5, got {(min == null ? "null" : min.Value.ToString())}", ref failed);
+            Fail(ref testNumber, "FindMin after single insert returns 5", $"expected 5, got {(min == default(int) ? "null" : min.ToString())}", ref failed);
             return;
         }
         Pass(ref testNumber, "FindMin after single insert returns 5", ref passed);
@@ -89,9 +90,9 @@ public static class PairHeapTest
         heap.Insert(3);
         heap.Insert(7);
         min = heap.FindMin();
-        if (min == null || min.Value != 3)
+        if (min == default(int) || min!= 3)
         {
-            Fail(ref testNumber, "FindMin after insert 5,3,7 returns 3", $"expected 3, got {(min == null ? "null" : min.Value.ToString())}", ref failed);
+            Fail(ref testNumber, "FindMin after insert 5,3,7 returns 3", $"expected 3, got {(min == null ? "null" : min.ToString())}", ref failed);
             return;
         }
         Pass(ref testNumber, "FindMin after insert 5,3,7 returns 3", ref passed);
@@ -103,9 +104,9 @@ public static class PairHeapTest
     /// <param name="testNumber">Current test index</param>
     /// <param name="passed">Count of passed tests</param>
     /// <param name="failed">Count of failed tests</param>
-    private static void RunDeleteMin(ref int testNumber, ref int passed, ref int failed)
+    private static void RunExtractMin(ref int testNumber, ref int passed, ref int failed)
     {
-        var heap = new FibonacciHeap<int>();
+        var heap = new PairingHeap<int>();
         heap.Insert(10);
         heap.Insert(5);
         heap.Insert(15);
@@ -115,16 +116,16 @@ public static class PairHeapTest
         var order = new[] { 1, 5, 8, 10, 15 };
         for (var i = 0; i < order.Length; i++)
         {
-            var node = heap.DeleteMin();
-            if (node.Value != order[i])
+            var node = heap.ExtractMin();
+            if (node != order[i])
             {
-                Fail(ref testNumber, "DeleteMin returns 1,5,8,10,15 in order", $"DeleteMin #{i + 1}: expected {order[i]}, got {node.Value}", ref failed);
+                Fail(ref testNumber, "DeleteMin returns 1,5,8,10,15 in order", $"DeleteMin #{i + 1}: expected {order[i]}, got {node}", ref failed);
                 return;
             }
         }
         Pass(ref testNumber, "DeleteMin returns 1,5,8,10,15 in order", ref passed);
 
-        if (heap.FindMin() != null)
+        if (heap.FindMin() != default(int))
         {
             Fail(ref testNumber, "FindMin is null after all elements removed", "expected null, got non-null", ref failed);
             return;
@@ -140,12 +141,12 @@ public static class PairHeapTest
     /// <param name="failed">Count of failed tests</param>
     private static void RunDecreaseKey(ref int testNumber, ref int passed, ref int failed)
     {
-        var heap = new FibonacciHeap<int>();
+        var heap = new PairingHeap<int>();
         var n20 = heap.Insert(20);
         heap.Insert(10);
         heap.Insert(30);
 
-        if (heap.FindMin()?.Value != 10)
+        if (heap.FindMin() != 10)
         {
             Fail(ref testNumber, "FindMin before DecreaseKey is 10", "expected 10", ref failed);
             return;
@@ -153,17 +154,17 @@ public static class PairHeapTest
 
         heap.DecreaseKey(n20, 5);
         var min = heap.FindMin();
-        if (min == null || min.Value != 5)
+        if (min == default(int) || min != 5)
         {
-            Fail(ref testNumber, "FindMin after DecreaseKey(20->5) is 5", $"expected 5, got {(min == null ? "null" : min.Value.ToString())}", ref failed);
+            Fail(ref testNumber, "FindMin after DecreaseKey(20->5) is 5", $"expected 5, got {(min == null ? "null" : min.ToString())}", ref failed);
             return;
         }
         Pass(ref testNumber, "FindMin after DecreaseKey(20->5) is 5", ref passed);
 
-        var first = heap.DeleteMin();
-        if (first.Value != 5)
+        var first = heap.ExtractMin();
+        if (first != 5)
         {
-            Fail(ref testNumber, "DeleteMin returns decreased node (5)", $"expected 5, got {first.Value}", ref failed);
+            Fail(ref testNumber, "DeleteMin returns decreased node (5)", $"expected 5, got {first}", ref failed);
             return;
         }
         Pass(ref testNumber, "DeleteMin returns decreased node (5)", ref passed);
@@ -177,7 +178,7 @@ public static class PairHeapTest
     /// <param name="failed">Count of failed tests</param>
     private static void RunCombined(ref int testNumber, ref int passed, ref int failed)
     {
-        var heap = new FibonacciHeap<int>();
+        var heap = new PairingHeap<int>();
         var n100 = heap.Insert(100);
         heap.Insert(50);
         heap.Insert(75);
@@ -185,10 +186,10 @@ public static class PairHeapTest
         heap.Insert(60);
 
         heap.DecreaseKey(n100, 10);
-        var min = heap.DeleteMin();
-        if (min.Value != 10)
+        var min = heap.ExtractMin();
+        if (min != 10)
         {
-            Fail(ref testNumber, "Combined: insert then DecreaseKey(100->10); first DeleteMin gives 10", $"expected 10, got {min.Value}", ref failed);
+            Fail(ref testNumber, "Combined: insert then DecreaseKey(100->10); first DeleteMin gives 10", $"expected 10, got {min}", ref failed);
             return;
         }
         Pass(ref testNumber, "Combined: insert then DecreaseKey(100->10); first DeleteMin gives 10", ref passed);
@@ -196,10 +197,10 @@ public static class PairHeapTest
         var expectedOrder = new[] { 25, 50, 60, 75 };
         foreach (var expected in expectedOrder)
         {
-            var node = heap.DeleteMin();
-            if (node.Value != expected)
+            var node = heap.ExtractMin();
+            if (node != expected)
             {
-                Fail(ref testNumber, "Combined: remaining DeleteMin order 25,50,60,75", $"expected {expected}, got {node.Value}", ref failed);
+                Fail(ref testNumber, "Combined: remaining DeleteMin order 25,50,60,75", $"expected {expected}, got {node}", ref failed);
                 return;
             }
         }
@@ -214,10 +215,10 @@ public static class PairHeapTest
     /// <param name="failed">Count of failed tests</param>
     private static void RunEmptyDeleteMinThrows(ref int testNumber, ref int passed, ref int failed)
     {
-        var heap = new FibonacciHeap<int>();
+        var heap = new PairingHeap<int>();
         try
         {
-            heap.DeleteMin();
+            heap.ExtractMin();
             Fail(ref testNumber, "DeleteMin on empty heap throws InvalidOperationException", "no exception thrown", ref failed);
         }
         catch (InvalidOperationException ex) when (ex.Message.Contains("empty", StringComparison.OrdinalIgnoreCase))
@@ -238,7 +239,7 @@ public static class PairHeapTest
     /// <param name="failed">Count of failed tests</param>
     private static void RunDecreaseKeyInvalidThrows(ref int testNumber, ref int passed, ref int failed)
     {
-        var heap = new FibonacciHeap<int>();
+        var heap = new PairingHeap<int>();
         var n = heap.Insert(5);
         try
         {
@@ -263,15 +264,15 @@ public static class PairHeapTest
     /// <param name="failed">Count of failed tests</param>
     private static void RunDataTypeIndependence(ref int testNumber, ref int passed, ref int failed)
     {
-        var heap = new FibonacciHeap<string>();
+        var heap = new PairingHeap<string>();
         heap.Insert("z");
         heap.Insert("a");
         heap.Insert("m");
 
         var min = heap.FindMin();
-        if (min == null || min.Value != "a")
+        if (min == default(string) || min != "a")
         {
-            Fail(ref testNumber, "FindMin with string type returns \"a\"", $"expected \"a\", got {(min == null ? "null" : $"\"{min.Value}\"")}", ref failed);
+            Fail(ref testNumber, "FindMin with string type returns \"a\"", $"expected \"a\", got {(min == null ? "null" : $"\"{min}\"")}", ref failed);
             return;
         }
         Pass(ref testNumber, "FindMin with string type returns \"a\"", ref passed);
@@ -279,10 +280,10 @@ public static class PairHeapTest
         var order = new[] { "a", "m", "z" };
         for (var i = 0; i < order.Length; i++)
         {
-            var node = heap.DeleteMin();
-            if (node.Value != order[i])
+            var node = heap.ExtractMin();
+            if (node != order[i])
             {
-                Fail(ref testNumber, "DeleteMin with string type returns \"a\",\"m\",\"z\" in order", $"#{i + 1}: expected \"{order[i]}\", got \"{node.Value}\"", ref failed);
+                Fail(ref testNumber, "DeleteMin with string type returns \"a\",\"m\",\"z\" in order", $"#{i + 1}: expected \"{order[i]}\", got \"{node}\"", ref failed);
                 return;
             }
         }

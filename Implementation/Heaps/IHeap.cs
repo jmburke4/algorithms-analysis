@@ -13,7 +13,7 @@ public interface IHeap<T> where T : IComparable<T>
     /// Return the minimum value in the heap without modifying the heap.
     /// </summary>
     /// <returns>The minimum value in the heap</returns>
-    public T FindMin();
+    public T? FindMin();
 
     /// <summary>
     /// Remove and return the minimum value in the heap, modifying the heap.
