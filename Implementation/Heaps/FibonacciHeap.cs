@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+namespace Implementation.Heaps;
+
 /// <summary>
 /// A Fibonacci heap implementation.
 /// <para>
