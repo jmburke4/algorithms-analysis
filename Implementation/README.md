@@ -1,6 +1,5 @@
 # CS-470, Project 1 - Algorithms Analysis
-# Lox Interpreter (C#)
-**Brock Kitterman - 12322954 - bfkitterman@crimson.ua.edu**
+**Brock Kitterman - bfkitterman@crimson.ua.edu**
 
 This file overviews the Algorithms Analysis project for CS-470.
 
@@ -43,6 +42,20 @@ The project is broken into three areas. A heaps folder, a algorithms folder, and
 ⌞-README.md
 
 # Testing
+## Metric Collection
+Metrics are collected for the following for each individual test case:
+- Total Runtime (ms)
+- Heap Operations (Insert, ExtractMin, DecreaseKey)
+- Decrease Key Time (ms)
+- Extract Min Time (ms)
+- Memory  Delta (kb, memory change from start to end of test pre-garbage collection)
+
+Note: If Decrease/Extract time is 0, it means those functions were never called. 
+
+All time is collected with the same metrics system with the same calls to avoid mismatches, and interior methods (Cut, Merge, etc.) do not count towards operations as they are not public API.
+
+Extract/Decrease time checks take place after a initial root != null check. However, since both heaps do the same checks, this is trivial and will not affect overall results. 
+
 ## Heap Testing
 For both fibonacci and pair heap implementations, the same basic tests were performed in order to ensure they were functional, with multiple data types as well.
 

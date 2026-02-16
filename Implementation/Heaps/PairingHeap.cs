@@ -75,8 +75,10 @@ public class PairingHeap<T> : IHeap<T> where T : IComparable<T>
     /// <returns>The updated heap</returns>
     public Node<T> Insert(T newValue)
     {
+        MetricsHandler.StartHeapOperation(MetricsHandler.OpType.Insert);
         Node<T> newNode = new Node<T>(newValue, false);
         Root = merge(Root, newNode);
+        MetricsHandler.EndHeapOperation();
         return Root;
     }
 
@@ -88,6 +90,7 @@ public class PairingHeap<T> : IHeap<T> where T : IComparable<T>
     public T ExtractMin()
     {
         if(Root == null) throw new InvalidOperationException("Root node is null and heap is empty");
+        MetricsHandler.StartHeapOperation(MetricsHandler.OpType.ExtractMin);
 
         Node<T> oldRoot = Root;
         Node<T> currentNode = Root.Child;
@@ -96,6 +99,7 @@ public class PairingHeap<T> : IHeap<T> where T : IComparable<T>
         if(currentNode == null) 
         {
             Root = null;
+            MetricsHandler.EndHeapOperation();
             return oldRoot.Value; // Empty heap
         }
 
@@ -134,6 +138,7 @@ public class PairingHeap<T> : IHeap<T> where T : IComparable<T>
         
         Root = result;
         Root.Parent = null;
+        MetricsHandler.EndHeapOperation();
         return oldRoot.Value;
     }
 
@@ -157,7 +162,8 @@ public class PairingHeap<T> : IHeap<T> where T : IComparable<T>
             "Error: Cannot decrease key of pairing heap if new value is larger than previous value.\nPassed: " + newValue + 
             "\nPrevious Value: " + 
             updateNode.Value);
-        
+        MetricsHandler.StartHeapOperation(MetricsHandler.OpType.DecreaseKey);
+
         updateNode.Value = newValue;
 
         // Check if heap is violated
@@ -179,5 +185,6 @@ public class PairingHeap<T> : IHeap<T> where T : IComparable<T>
             // Merge and return as root
             Root = merge(Root, updateNode);
         }
+        MetricsHandler.EndHeapOperation();
     }
 }
