@@ -31,6 +31,7 @@ public static class PairHeapTest
         Console.WriteLine();
         Console.WriteLine($"Results: {passed} passed, {failed} failed.");
         Console.WriteLine(failed == 0 ? "All tests passed." : "Some tests failed.");
+        Console.WriteLine();
     }
 
    /// <summary>
