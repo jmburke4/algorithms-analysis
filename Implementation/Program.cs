@@ -6,5 +6,7 @@ class Program
     {
         FibHeapTest.Run();
         PairHeapTest.Run();
+        GraphTest.Run();
+        DijkstraTest.Run();
     }
 }

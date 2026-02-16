@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+namespace Implementation.Heaps;
+
 /// <summary>
 /// A Fibonacci heap implementation.
 /// <para>
@@ -9,7 +11,7 @@ using System.Collections.Generic;
 /// Author: Christian Lindner, calindner@crimson.ua.edu
 /// </summary>
 /// <typeparam name="T">Element type; must implement IComparable of T</typeparam>
-public class FibonacciHeap<T> where T : IComparable<T>
+public class FibonacciHeap<T> : IHeap<T> where T : IComparable<T>
 {
     /// <summary>
     /// The current heap's minimum root node; null if heap is empty.
@@ -96,9 +98,12 @@ public class FibonacciHeap<T> where T : IComparable<T>
     /// Return the node with minimum key, or null if the heap is empty.
     /// </summary>
     /// <returns>The heap's minimum node, or null if empty</returns>
-    public Node<T>? FindMin()
+    public T? FindMin()
     {
-        return min;
+        if (min == null)
+            return default;
+        
+        return min.Value;
     }
 
     /// <summary>
@@ -120,7 +125,7 @@ public class FibonacciHeap<T> where T : IComparable<T>
     /// </summary>
     /// <returns>The heap's minimum node</returns>
     /// <exception cref="InvalidOperationException">If the heap is empty</exception>
-    public Node<T> DeleteMin()
+    public T ExtractMin()
     {
         if (min == null)
             throw new InvalidOperationException("Heap is empty.");
@@ -153,7 +158,7 @@ public class FibonacciHeap<T> where T : IComparable<T>
         }
 
         if (min == null)
-            return oldMin;
+            return oldMin.Value;
 
         // First pass: collect all roots
         var roots = new List<Node<T>>();
@@ -194,7 +199,7 @@ public class FibonacciHeap<T> where T : IComparable<T>
                 AddRoot(r);
         }
 
-        return oldMin;
+        return oldMin.Value;
     }
 
     /// <summary>

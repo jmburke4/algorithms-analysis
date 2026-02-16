@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
+namespace Implementation.Heaps;
+
 /// <summary>
 /// A pairing heap implementation.
 /// <para>
@@ -10,7 +12,7 @@ using System;
 /// 
 /// Author: Brock Kitterman - bfkitterman@crimson.ua.edu
 /// </summary>
-public class PairingHeap<T> where T: IComparable<T>
+public class PairingHeap<T> : IHeap<T> where T : IComparable<T>
 {
     /// <summary>
     /// The current heap's root node.
@@ -83,9 +85,9 @@ public class PairingHeap<T> where T: IComparable<T>
     /// </summary>
     /// <returns>The heap's minimum value</returns>
     /// <exception cref="Exception">If root is null, throw exception</exception>
-    public Node<T> DeleteMin()
+    public T ExtractMin()
     {
-        if(Root == null) throw new InvalidOperationException("Root node is null");
+        if(Root == null) throw new InvalidOperationException("Root node is null and heap is empty");
 
         Node<T> oldRoot = Root;
         Node<T> currentNode = Root.Child;
@@ -94,7 +96,7 @@ public class PairingHeap<T> where T: IComparable<T>
         if(currentNode == null) 
         {
             Root = null;
-            return oldRoot; // Empty heap
+            return oldRoot.Value; // Empty heap
         }
 
         // First pass: Pair up siblings
@@ -132,12 +134,15 @@ public class PairingHeap<T> where T: IComparable<T>
         
         Root = result;
         Root.Parent = null;
-        return oldRoot;
+        return oldRoot.Value;
     }
 
-    public Node<T> FindMin()
+    public T? FindMin()
     {
-        return Root;
+        if (Root == null)
+            return default;
+        
+        return Root.Value;
     }
 
     /// <summary>
@@ -146,7 +151,7 @@ public class PairingHeap<T> where T: IComparable<T>
     /// <param name="updateNode">Node to update</param>
     /// <param name="newValue">Value to update to</param>
     /// <returns>The updated heap</returns>
-    public Node<T> DecreaseKey(Node<T> updateNode, T newValue)
+    public void DecreaseKey(Node<T> updateNode, T newValue)
     {
         if(updateNode.Value.CompareTo(newValue) < 0) throw new InvalidOperationException(
             "Error: Cannot decrease key of pairing heap if new value is larger than previous value.\nPassed: " + newValue + 
@@ -154,7 +159,6 @@ public class PairingHeap<T> where T: IComparable<T>
             updateNode.Value);
         
         updateNode.Value = newValue;
-        if(updateNode == Root) return Root;
 
         // Check if heap is violated
         if(updateNode.Value.CompareTo(updateNode.Parent.Value) < 0)
@@ -175,7 +179,5 @@ public class PairingHeap<T> where T: IComparable<T>
             // Merge and return as root
             Root = merge(Root, updateNode);
         }
-
-        return Root;
     }
 }
