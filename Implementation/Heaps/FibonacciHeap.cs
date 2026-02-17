@@ -89,8 +89,10 @@ public class FibonacciHeap<T> : IHeap<T> where T : IComparable<T>
     /// <returns>The new node (for use with DecreaseKey)</returns>
     public Node<T> Insert(T value)
     {
+        MetricsHandler.StartHeapOperation(MetricsHandler.OpType.Insert);
         var node = new Node<T>(value, isFibonacci: true);
         AddRoot(node);
+        MetricsHandler.EndHeapOperation();
         return node;
     }
 
@@ -130,6 +132,7 @@ public class FibonacciHeap<T> : IHeap<T> where T : IComparable<T>
         if (min == null)
             throw new InvalidOperationException("Heap is empty.");
 
+        MetricsHandler.StartHeapOperation(MetricsHandler.OpType.ExtractMin);
         var oldMin = min;
         RemoveFromList(min);
 
@@ -157,8 +160,10 @@ public class FibonacciHeap<T> : IHeap<T> where T : IComparable<T>
             oldMin.Degree = 0;
         }
 
-        if (min == null)
+        if (min == null) {
+            MetricsHandler.EndHeapOperation();
             return oldMin.Value;
+        }
 
         // First pass: collect all roots
         var roots = new List<Node<T>>();
@@ -199,6 +204,7 @@ public class FibonacciHeap<T> : IHeap<T> where T : IComparable<T>
                 AddRoot(r);
         }
 
+        MetricsHandler.EndHeapOperation();
         return oldMin.Value;
     }
 
@@ -213,6 +219,8 @@ public class FibonacciHeap<T> : IHeap<T> where T : IComparable<T>
         if (newValue.CompareTo(updateNode.Value) > 0)
             throw new InvalidOperationException("DecreaseKey requires new value to be less than or equal to current value.");
 
+        MetricsHandler.StartHeapOperation(MetricsHandler.OpType.DecreaseKey);
+
         updateNode.Value = newValue;
 
         if (updateNode.Parent == null)
@@ -220,14 +228,18 @@ public class FibonacciHeap<T> : IHeap<T> where T : IComparable<T>
             // Already root, update min if root is smaller
             if (min != null && updateNode.Value.CompareTo(min.Value) < 0)
                 min = updateNode;
+            MetricsHandler.EndHeapOperation();
             return;
         }
 
-        if (updateNode.Value.CompareTo(updateNode.Parent.Value) >= 0)
+        if (updateNode.Value.CompareTo(updateNode.Parent.Value) >= 0) {
+            MetricsHandler.EndHeapOperation();
             return;
+        }
 
         // Heap violated: cut node from parent and add to root list; cascading cut if parent marked
         Cut(updateNode);
+        MetricsHandler.EndHeapOperation();
     }
 
     /// <summary>

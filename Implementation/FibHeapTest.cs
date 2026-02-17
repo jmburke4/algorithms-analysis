@@ -41,9 +41,12 @@ public static class FibHeapTest
     /// <param name="passed">Count of passed tests (incremented)</param>
     private static void Pass(ref int testNumber, string description, ref int passed)
     {
+        MetricsHandler.EndTest();
         testNumber++;
         Console.WriteLine($"Test {testNumber} - {description} - Passed");
+        MetricsHandler.PrintMetrics();
         passed++;
+        MetricsHandler.StartTest();
     }
 
     /// <summary>
@@ -55,9 +58,11 @@ public static class FibHeapTest
     /// <param name="failed">Count of failed tests (incremented)</param>
     private static void Fail(ref int testNumber, string description, string reason, ref int failed)
     {
+        try{MetricsHandler.EndTest();}catch(Exception exp) {}
         testNumber++;
         Console.WriteLine($"Test {testNumber} - {description} - FAILED: {reason}");
         failed++;
+        MetricsHandler.StartTest();
     }
 
     /// <summary>
@@ -68,6 +73,7 @@ public static class FibHeapTest
     /// <param name="failed">Count of failed tests</param>
     private static void RunInsertAndFindMin(ref int testNumber, ref int passed, ref int failed)
     {
+        MetricsHandler.StartTest();
         var heap = new FibonacciHeap<int>();
 
         // FindMin on empty heap should return null
@@ -106,6 +112,7 @@ public static class FibHeapTest
     /// <param name="failed">Count of failed tests</param>
     private static void RunExtractMin(ref int testNumber, ref int passed, ref int failed)
     {
+        MetricsHandler.StartTest();
         var heap = new FibonacciHeap<int>();
         heap.Insert(10);
         heap.Insert(5);
@@ -141,6 +148,7 @@ public static class FibHeapTest
     /// <param name="failed">Count of failed tests</param>
     private static void RunDecreaseKey(ref int testNumber, ref int passed, ref int failed)
     {
+        MetricsHandler.StartTest();
         var heap = new FibonacciHeap<int>();
         var n20 = heap.Insert(20);
         heap.Insert(10);
@@ -178,6 +186,7 @@ public static class FibHeapTest
     /// <param name="failed">Count of failed tests</param>
     private static void RunCombined(ref int testNumber, ref int passed, ref int failed)
     {
+        MetricsHandler.StartTest();
         var heap = new FibonacciHeap<int>();
         var n100 = heap.Insert(100);
         heap.Insert(50);
@@ -215,6 +224,7 @@ public static class FibHeapTest
     /// <param name="failed">Count of failed tests</param>
     private static void RunEmptyDeleteMinThrows(ref int testNumber, ref int passed, ref int failed)
     {
+        MetricsHandler.StartTest();
         var heap = new FibonacciHeap<int>();
         try
         {
@@ -239,6 +249,7 @@ public static class FibHeapTest
     /// <param name="failed">Count of failed tests</param>
     private static void RunDecreaseKeyInvalidThrows(ref int testNumber, ref int passed, ref int failed)
     {
+        MetricsHandler.StartTest();
         var heap = new FibonacciHeap<int>();
         var n = heap.Insert(5);
         try
@@ -264,6 +275,7 @@ public static class FibHeapTest
     /// <param name="failed">Count of failed tests</param>
     private static void RunDataTypeIndependence(ref int testNumber, ref int passed, ref int failed)
     {
+        MetricsHandler.StartTest();
         var heap = new FibonacciHeap<string>();
         heap.Insert("z");
         heap.Insert("a");
