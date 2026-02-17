@@ -1,5 +1,8 @@
 # CS-470, Project 1 - Algorithms Analysis
+
 **Brock Kitterman - bfkitterman@crimson.ua.edu**
+
+**Jackson Burke - jmburke4@crimson.ua.edu**
 
 This file overviews the Algorithms Analysis project for CS-470.
 
@@ -23,7 +26,7 @@ dotnet run # this will run the test engine, and will run all tests
 ```
 
 # Organization
-The project is broken into three areas. A heaps folder, a algorithms folder, and a testing folder.
+The project is broken into three areas. A heaps folder, an algorithms folder, and a testing folder.
 
 #### Project Directory
 **Note:** Only important files are recorded here.
@@ -87,11 +90,21 @@ These tests are:
 
 ## Graph Testing
 
+The Graph class is a generic weighted directed/undirected graph implementation that provides core functionality for algorithms like Dijkstra's and Prim's. It manages a collection of typed nodes and weighted edges efficiently using an adjacency list representation internally. The Graph class supports adding directed edges (`AddEdge`), undirected edges (`AddUndirectedEdge`), retrieving neighbors from a node, looking up edge weights, and accessing nodes by index or value.
+
+The GraphTest class verifies the Graph implementation through comprehensive testing. Basic construction tests ensure that graphs are properly initialized with the correct node count, and that node indexing and lookups work correctly. Edge operation tests validate that directed and undirected edges are correctly stored and retrieve-able, confirming that GetNeighbors returns accurate edge weights and that edge weight lookups work for both existing and non-existing edges.
 
 *Note:* To see test output, see `GraphTestOutput.md` file.
 
 ## Algorithm Testing
 
+### Dijkstra's Algorithm Testing
+
+Dijkstra's algorithm is tested across multiple graph scenarios to validate correct computation of single-source shortest paths. The DijkstraTest class exercises the algorithm with basic scenario tests (simple 4-node graphs), worst-case scenarios (linear chains requiring all edge relaxations), and best-case scenarios (direct edges from source). More complex tests include multi-path graphs where the algorithm must choose optimal routes, dense graphs with cycles and redundant paths, and large layered graphs with 25 nodes to stress the algorithm at scale. Each test validates both the computed shortest distances and the ability to reconstruct the actual shortest paths. All tests are executed with both Fibonacci and Pairing heap implementations to measure performance differences.
+
+### Prim's Algorithm Testing
+
+Prim's algorithm is tested for correct computation of minimum spanning trees across diverse graph topologies. The PrimsTest class covers basic graph scenarios with simple 4-node configurations, randomly generated graphs to test general case performance and correctness, grid-based graph structures to validate behavior on regular patterns, and worst-case scenarios designed to challenge the algorithm. Tests verify that the algorithm correctly identifies and includes all required edges for a minimum spanning tree while excluding unnecessary edges. Similar to Dijkstra testing, all Prim tests are executed with both Fibonacci and Pairing heap implementations to evaluate their relative performance impact on the algorithm.
 
 **Note:** To see test output, see `PrimsTestOutput.md` or `DijkstraTestOutput.md` files.
 
