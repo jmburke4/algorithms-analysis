@@ -27,9 +27,12 @@ public static class DijkstraTest
 
     private static void Pass(ref int testNumber, string description, ref int passed)
     {
+        MetricsHandler.EndTest();
         testNumber++;
         Console.WriteLine($"Test {testNumber} - {description} - Passed");
+        MetricsHandler.PrintMetrics();
         passed++;
+        MetricsHandler.StartTest();
     }
 
     private static void Fail(ref int testNumber, string description, string reason, ref int failed)
@@ -37,10 +40,12 @@ public static class DijkstraTest
         testNumber++;
         Console.WriteLine($"Test {testNumber} - {description} - FAILED: {reason}");
         failed++;
+        MetricsHandler.StartTest();
     }
 
     private static void RunBasicScenario(ref int testNumber, ref int passed, ref int failed)
     {
+        MetricsHandler.StartTest();
         var nodes = new[] { "A", "B", "C", "D" };
         var g = new Graph<string>(nodes);
 
@@ -91,6 +96,8 @@ public static class DijkstraTest
     private static void RunWorstCaseLinearChain(ref int testNumber, ref int passed, ref int failed)
     {
         // Worst case: Linear chain A->B->C->D->E->F where algorithm must relax all edges
+        MetricsHandler.StartTest();
+        
         var nodes = new[] { "A", "B", "C", "D", "E", "F" };
         var g = new Graph<string>(nodes);
 
@@ -133,6 +140,8 @@ public static class DijkstraTest
     private static void RunBestCaseSingleEdge(ref int testNumber, ref int passed, ref int failed)
     {
         // Best case: Direct edge from source to all other nodes
+        MetricsHandler.StartTest();
+        
         var nodes = new[] { "S", "A", "B", "C" };
         var g = new Graph<string>(nodes);
 
@@ -177,6 +186,8 @@ public static class DijkstraTest
         //    v             |
         //    C ----------->+
         //         4
+        MetricsHandler.StartTest();
+
         var nodes = new[] { "A", "B", "C", "D" };
         var g = new Graph<string>(nodes);
 
@@ -233,6 +244,9 @@ public static class DijkstraTest
         //    |  \  |  /  |
         //    D---+-E----+
         //        6  4
+
+        MetricsHandler.StartTest();
+
         var nodes = new[] { "A", "B", "C", "D", "E" };
         var g = new Graph<string>(nodes);
 
@@ -293,6 +307,8 @@ public static class DijkstraTest
         // Layer 3: D0, D1, D2, D3, D4
         // Layer 4: E0, E1, E2, E3, E4
         
+        MetricsHandler.StartTest();
+
         var nodes = new string[25];
         var nodeIdx = 0;
         var layers = new[] { "A", "B", "C", "D", "E" };
