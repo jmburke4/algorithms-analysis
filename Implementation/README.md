@@ -27,6 +27,7 @@ The project is broken into three areas. A heaps folder, a algorithms folder, and
 
 #### Project Directory
 **Note:** Only important files are recorded here.
+```
 |- Heaps
 |   |- PairingHeaps.cs
 |   ⌞- FibonacciHeaps.cs
@@ -39,7 +40,8 @@ The project is broken into three areas. A heaps folder, a algorithms folder, and
 |- PairHeapTest.cs
 |- Program.cs
 |- Implementation.csproj
-⌞-README.md
+⌞- README.md
+```
 
 # Testing
 ## Metric Collection
