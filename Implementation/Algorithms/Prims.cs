@@ -48,25 +48,29 @@ public static class Prims {
         }
 
         int totalWeight = 0;
+        int added = 0;
 
-        for(int x = 0; x < nodeCount; x++){
+        while (added < nodeCount)
+        {
+                var minNode = heap.ExtractMin();
+                int u = minNode.Vertex;
 
-            var minNode = heap.ExtractMin();
-            int u = minNode.Vertex;
+                if (inMst[u])
+                    continue;
 
-            if (inMst[u])
-               continue;
+                inMst[u] = true;
+                totalWeight += minNode.Weight;
+                added++;
 
-            inMst[u] = true;
-            totalWeight += minNode.Weight;
+                var neighbors = graph.GetNeighbors(u).ToList();
+                for (int i = 0; i < neighbors.Count; i++)
+                {
 
-            var neighbors = graph.GetNeighbors(u).ToList();
-            for (int i = 0; i < neighbors.Count; i++){
+                    int v = neighbors[i].neighbor;
+                    int w = neighbors[i].weight;
 
-                int v = neighbors[i].neighbor;
-                int w = neighbors[i].weight;
-
-                if (!inMst[v] && w < minEdgeWeight[v]){
+                    if (!inMst[v] && w < minEdgeWeight[v])
+                    {
                         minEdgeWeight[v] = w;
                         parent[v] = u;
                         heap.DecreaseKey(heapNodes[v], new KeyedVertex(w, v));
