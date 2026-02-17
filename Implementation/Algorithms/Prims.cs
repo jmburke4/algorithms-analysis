@@ -1,9 +1,12 @@
 ﻿using Implementation.Heaps;
 
 namespace Implementation.Algorithms;
-public static class Prims {
+
+public static class Prims
+{
     public static (int[] parent, int totalWeight)
-            MinimumSpanningTree<T>(Graph<T> graph, IHeap<Graph<T>.KeyedVertex> heap, T start) {
+        MinimumSpanningTree<T>(Graph<T> graph, IHeap<Graph<T>.KeyedVertex> heap, T start)
+    {
 
         ArgumentNullException.ThrowIfNull(graph);
         ArgumentNullException.ThrowIfNull(heap);
@@ -15,7 +18,8 @@ public static class Prims {
         int[] parent = new int[nodeCount];
         bool[] inMst = new bool[nodeCount];
 
-        for (int i = 0; i < nodeCount; i++) {
+        for (int i = 0; i < nodeCount; i++)
+        {
             minEdgeWeight[i] = int.MaxValue;
             parent[i] = -1;
         }
@@ -24,36 +28,41 @@ public static class Prims {
 
         var heapNodes = new Node<Graph<T>.KeyedVertex>[nodeCount];
 
-        for (int i = 0; i < nodeCount; i++) {
+        for (int i = 0; i < nodeCount; i++)
+        {
             heapNodes[i] = heap.Insert(new Graph<T>.KeyedVertex(minEdgeWeight[i], i));
         }
 
         int totalWeight = 0;
+        int added = 0;
 
-        for(int x = 0; x < nodeCount; x++){
-
+        while (added < nodeCount)
+        {
             var minNode = heap.ExtractMin();
             int u = minNode.Vertex;
 
             if (inMst[u])
-               continue;
+                continue;
 
             inMst[u] = true;
             totalWeight += minNode.Weight;
+            added++;
 
             var neighbors = graph.GetNeighbors(u).ToList();
-            for (int i = 0; i < neighbors.Count; i++){
+            for (int i = 0; i < neighbors.Count; i++)
+            {
 
                 int v = neighbors[i].neighbor;
                 int w = neighbors[i].weight;
 
-                if (!inMst[v] && w < minEdgeWeight[v]){
-                        minEdgeWeight[v] = w;
-                        parent[v] = u;
-                        heap.DecreaseKey(heapNodes[v], new Graph<T>.KeyedVertex(w, v));
-                    }
+                if (!inMst[v] && w < minEdgeWeight[v])
+                {
+                    minEdgeWeight[v] = w;
+                    parent[v] = u;
+                    heap.DecreaseKey(heapNodes[v], new Graph<T>.KeyedVertex(w, v));
                 }
             }
-            return (parent, totalWeight);
+        }
+        return (parent, totalWeight);
     }
 }
