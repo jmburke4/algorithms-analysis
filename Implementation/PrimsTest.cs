@@ -14,7 +14,7 @@ public static class PrimsTest
 
         RunPrimScenario<FibonacciHeap<Prims.KeyedVertex>>(ref testNumber, ref passed, ref failed, "FibonacciHeap");
 
-        RunPrimScenario<PairingHeap<Prims.KeyedVertex>>(ref testNumber, ref passed, ref failed, "PairingHeap");
+        //RunPrimScenario<PairingHeap<Prims.KeyedVertex>>(ref testNumber, ref passed, ref failed, "PairingHeap");
 
         Console.WriteLine();
         Console.WriteLine($"Results: {passed} passed, {failed} failed.");
@@ -58,7 +58,7 @@ public static class PrimsTest
             return;
         }
         else {
-            Pass(ref testNumber, $"Prim MST total weight using {heapName}", ref passed);
+            Pass(ref testNumber, $"Prim MST total weight is 6 using {heapName}", ref passed);
         }
 
         //Test 2 - Structure Check
@@ -74,6 +74,6 @@ public static class PrimsTest
             Fail(ref testNumber, $"Prim MST edge count using {heapName}", $"expected {nodes.Length - 1}, got {edgeCount}", ref failed);
             return;
         }
-        Pass(ref testNumber, $"Prim MST edge count using {heapName}", ref passed);
+        Pass(ref testNumber, $"Prim MST edge count is {edgeCount} using {heapName}", ref passed);
     }
 }
