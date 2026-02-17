@@ -2,27 +2,8 @@
 
 namespace Implementation.Algorithms;
 public static class Prims {
-    public readonly struct KeyedVertex : IComparable<KeyedVertex> {
-
-        public KeyedVertex(int weight, int vertex) {
-
-            Weight = weight;
-            Vertex = vertex;
-        }
-        public int Weight { get; }
-        public int Vertex { get; }
-
-        public int CompareTo(KeyedVertex other) {
-
-            int c = Weight.CompareTo(other.Weight);
-            return c != 0 ? c : Vertex.CompareTo(other.Vertex);
-        }
-
-        public override string ToString() => $"(v={Vertex}, w={Weight})";
-    }
-
     public static (int[] parent, int totalWeight)
-            MinimumSpanningTree<T>(Graph<T> graph, IHeap<KeyedVertex> heap, T start) {
+            MinimumSpanningTree<T>(Graph<T> graph, IHeap<Graph<T>.KeyedVertex> heap, T start) {
 
         ArgumentNullException.ThrowIfNull(graph);
         ArgumentNullException.ThrowIfNull(heap);
@@ -41,10 +22,10 @@ public static class Prims {
 
         minEdgeWeight[src] = 0;
 
-        var heapNodes = new Node<KeyedVertex>[nodeCount];
+        var heapNodes = new Node<Graph<T>.KeyedVertex>[nodeCount];
 
         for (int i = 0; i < nodeCount; i++) {
-            heapNodes[i] = heap.Insert(new KeyedVertex(minEdgeWeight[i], i));
+            heapNodes[i] = heap.Insert(new Graph<T>.KeyedVertex(minEdgeWeight[i], i));
         }
 
         int totalWeight = 0;
@@ -69,7 +50,7 @@ public static class Prims {
                 if (!inMst[v] && w < minEdgeWeight[v]){
                         minEdgeWeight[v] = w;
                         parent[v] = u;
-                        heap.DecreaseKey(heapNodes[v], new KeyedVertex(w, v));
+                        heap.DecreaseKey(heapNodes[v], new Graph<T>.KeyedVertex(w, v));
                     }
                 }
             }

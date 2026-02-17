@@ -118,5 +118,31 @@ public class Graph<T>
         weight = default;
         return false;
     }
+
+    /// <summary>
+    /// Heap element for a vertex: (distance from source, vertex index).
+    /// Comparable by distance (then by index as a stable tiebreaker).
+    /// </summary>
+    public readonly struct KeyedVertex : IComparable<KeyedVertex>
+    {
+        public KeyedVertex(long distance, int vertex)
+        {
+            Distance = distance;
+            Vertex = vertex;
+        }
+
+        public long Distance { get; }
+        public int Vertex { get; }
+
+        public int Weight => (int)Distance; // For Prim's algorithm where we use KeyedVertex to store edge weights
+
+        public int CompareTo(KeyedVertex other)
+        {
+            int c = Distance.CompareTo(other.Distance);
+            return c != 0 ? c : Vertex.CompareTo(other.Vertex);
+        }
+
+        public override string ToString() => $"(v={Vertex}, d={Distance})";
+    }
 }
 
