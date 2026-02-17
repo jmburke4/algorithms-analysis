@@ -163,7 +163,7 @@ public class PairingHeap<T> : IHeap<T> where T : IComparable<T>
         // Check if heap is violated
         if(updateNode.Value.CompareTo(updateNode.Parent.Value) < 0)
         {
-            // If not first child, link siblings
+            // If not first child, link siblingsSystem.InvalidOperationException: 'Error: Cannot decrease key of pairing heap if new value is larger 
             // Else, link next sibling to parent
             if(updateNode.Prev != null) updateNode.Prev.Sibling = updateNode.Sibling;
             else updateNode.Parent.Child = updateNode.Sibling;

@@ -17,6 +17,8 @@ public static class Prims {
             int c = Weight.CompareTo(other.Weight);
             return c != 0 ? c : Vertex.CompareTo(other.Vertex);
         }
+
+        public override string ToString() => $"(v={Vertex}, w={Weight})";
     }
 
     public static (int[] parent, int totalWeight)
@@ -28,30 +30,27 @@ public static class Prims {
         int nodeCount = graph.Count;
         int src = graph.IndexOf(start);
 
-        int[] key = new int[nodeCount];
+        int[] minEdgeWeight = new int[nodeCount];
         int[] parent = new int[nodeCount];
         bool[] inMst = new bool[nodeCount];
 
-        const int INF = int.MaxValue;
-
         for (int i = 0; i < nodeCount; i++) {
-            key[i] = int.MaxValue;
+            minEdgeWeight[i] = int.MaxValue;
             parent[i] = -1;
-            inMst[i] = false;
         }
 
-        key[src] = 0;
+        minEdgeWeight[src] = 0;
 
         var heapNodes = new Node<KeyedVertex>[nodeCount];
 
         for (int i = 0; i < nodeCount; i++) {
-            headNodes[i] = heap.Insert(new KeyedVertex(key[i], i));
+            heapNodes[i] = heap.Insert(new KeyedVertex(minEdgeWeight[i], i));
         }
 
-        int totWeight = 0;
+        int totalWeight = 0;
 
-        while (!heap.IsEmpty()){
-           
+        for(int x = 0; x < nodeCount; x++){
+
             var minNode = heap.ExtractMin();
             int u = minNode.Vertex;
 
@@ -59,16 +58,21 @@ public static class Prims {
                continue;
 
             inMst[u] = true;
-            totWeight += minNode.Weight;
+            totalWeight += minNode.Weight;
 
-            foreach (var (v, w) in graph.GetNeighbors(u)){
-                if (!inMst[v] && w<key[v]){
-                        key[v] = w;
+            var neighbors = graph.GetNeighbors(u).ToList();
+            for (int i = 0; i < neighbors.Count; i++){
+
+                int v = neighbors[i].neighbor;
+                int w = neighbors[i].weight;
+
+                if (!inMst[v] && w < minEdgeWeight[v]){
+                        minEdgeWeight[v] = w;
                         parent[v] = u;
                         heap.DecreaseKey(heapNodes[v], new KeyedVertex(w, v));
                     }
                 }
             }
-            return (parent, totWeight);
+            return (parent, totalWeight);
     }
 }

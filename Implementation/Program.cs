@@ -8,5 +8,6 @@ class Program
         PairHeapTest.Run();
         GraphTest.Run();
         DijkstraTest.Run();
+        PrimsTest.Run();
     }
 }
