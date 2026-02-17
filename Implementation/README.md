@@ -27,6 +27,7 @@ The project is broken into three areas. A heaps folder, a algorithms folder, and
 
 #### Project Directory
 **Note:** Only important files are recorded here.
+```
 |- Heaps
 |   |- PairingHeaps.cs
 |   ⌞- FibonacciHeaps.cs
@@ -34,12 +35,13 @@ The project is broken into three areas. A heaps folder, a algorithms folder, and
 |   |- TestFiles
 |       |- 
 |       ⌞- complexFunctions.
-|   ⌞- LoxTester.cs
+|   ⌞- 
 |- FibHeapTest.cs
 |- PairHeapTest.cs
 |- Program.cs
 |- Implementation.csproj
 ⌞-README.md
+```
 
 # Testing
 ## Metric Collection
@@ -73,3 +75,18 @@ These tests are:
 13. Delete min with many strings 
 
 *Note:* To see test output, see `HeapTestOutput.md` file.
+
+# Theory Vs. Practice
+There are a few key reasons why the theory of these heaps do not necessarily align with the reality.
+
+Firstly, computational theory and complexity are considered language agnostic and consider a perfect scenario, disregards hardware limitations and or implementations, and does not consider further overhead. 
+
+Likewise, C# does a lot of low level lifting and memory abstraction, meaning it adds extra steps under the hood to handle memory and other situations. As such, complexities can change based on implementation. This is mostly due to garbage collection and automatic memory allocation. This issue posses much less of an issue in languages such as C and C++ where its handled by the programmer rather than the compiler/runtime environment. This can also be much worse if done in a language such as Lisp or Python with dynamic typing, or that run on a single-thread event loop like JavaScript.
+
+It is also worth noting implementation of these heaps and their tests may not inherently be perfect and may have unnecessary steps not considered in the theory. Furthermore, it is worth noting that theory assumes a perfect environment. If, for example, a system were to be out of memory upon execution and require paging, times and operations can drastically vary based on paging system and implementation utilized by the operating system and hardware interfaces. However, this is secondary issue compared to cache locality. Since both heaps have heavy reliance on pointers, their operation time is drastically slowed by pointer chasing, which is slow in practice due to CPU misses (When a pointer/variable is not in the L1/2/3 cache and must be retrieved from memory, which pauses execution for hundreds of cycles).
+
+There is also the idea of Big O and its shortcoming. Consider Fibonacci and Pair heaps time for decrease key, which are both O(1) (Amortized for Fibonacci, conjectured for Pair) with outlier worst cases as O(logn) when the next smallest node is the at the bottom of the tree.
+
+There is one specific trap with Big O visible here: constants. Big O notation disregards constants. However, this is erroneous in the grand scheme, especially with Fibonacci heaps which have a great number of overhead. That O(1) does not consider that fibonacci heaps have a much greater total operation count. Fibonacci Decrease Key requires three pointers and two variables, whilst Pair heap only requires three pointers for this operation. As such, the code is shorter and can be executed faster.
+
+With all that said, theory is a good outline but not inherently accurate to the reality of the situation.
