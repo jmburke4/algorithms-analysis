@@ -1,7 +1,5 @@
 ﻿using Implementation.Algorithms;
 using Implementation.Heaps;
-using System;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Implementation;
 
@@ -14,17 +12,17 @@ public static class PrimsTest
         var passed = 0;
         var failed = 0;
 
-        RunBasicPrimScenario<FibonacciHeap<Prims.KeyedVertex>>(ref testNumber, ref passed, ref failed, "FibonacciHeap");
-        RunBasicPrimScenario<PairingHeap<Prims.KeyedVertex>>(ref testNumber, ref passed, ref failed, "PairingHeap");
+        RunBasicPrimScenario<FibonacciHeap<Graph<string>.KeyedVertex>>(ref testNumber, ref passed, ref failed, "FibonacciHeap");
+        RunBasicPrimScenario<PairingHeap<Graph<string>.KeyedVertex>>(ref testNumber, ref passed, ref failed, "PairingHeap");
 
-        RunRandomGraphScenario<FibonacciHeap<Prims.KeyedVertex>>(ref testNumber, ref passed, ref failed, "FibonacciHeap");
-        RunRandomGraphScenario<PairingHeap<Prims.KeyedVertex>>(ref testNumber, ref passed, ref failed, "PairingHeap");
+        RunRandomGraphScenario<FibonacciHeap<Graph<string>.KeyedVertex>>(ref testNumber, ref passed, ref failed, "FibonacciHeap");
+        RunRandomGraphScenario<PairingHeap<Graph<string>.KeyedVertex>>(ref testNumber, ref passed, ref failed, "PairingHeap");
 
-        RunGridGraphScenarios<FibonacciHeap<Prims.KeyedVertex>>(ref testNumber, ref passed, ref failed, "FibonacciHeap");
-        RunGridGraphScenarios<PairingHeap<Prims.KeyedVertex>>(ref testNumber, ref passed, ref failed, "PairingHeap");
+        RunGridGraphScenarios<FibonacciHeap<Graph<string>.KeyedVertex>>(ref testNumber, ref passed, ref failed, "FibonacciHeap");
+        RunGridGraphScenarios<PairingHeap<Graph<string>.KeyedVertex>>(ref testNumber, ref passed, ref failed, "PairingHeap");
 
-        RunWorstCaseScenario<FibonacciHeap<Prims.KeyedVertex>>(ref testNumber, ref passed, ref failed, "FibonacciHeap");
-        RunWorstCaseScenario<PairingHeap<Prims.KeyedVertex>>(ref testNumber, ref passed, ref failed, "PairingHeap");
+        RunWorstCaseScenario<FibonacciHeap<Graph<string>.KeyedVertex>>(ref testNumber, ref passed, ref failed, "FibonacciHeap");
+        RunWorstCaseScenario<PairingHeap<Graph<string>.KeyedVertex>>(ref testNumber, ref passed, ref failed, "PairingHeap");
 
 
         Console.WriteLine();
@@ -53,7 +51,7 @@ public static class PrimsTest
 
     //Simple undirected graph, checks MST total weight and edge count
     private static void RunBasicPrimScenario<THeap>(ref int testNumber, ref int passed, ref int failed, string heapName)
-        where THeap : IHeap<Prims.KeyedVertex>, new()
+        where THeap : IHeap<Graph<string>.KeyedVertex>, new()
     {
         MetricsHandler.StartTest();
         var nodes = new[] { "A", "B", "C", "D" };
@@ -68,7 +66,7 @@ public static class PrimsTest
 
         var (parent, totWeight) = Prims.MinimumSpanningTree(g, heap, "A");
 
-        //Test 1 - Total MST weight
+        // Test 1 - Total MST weight
         if (totWeight != 6)
         {
             Fail(ref testNumber, $"Prim MST total weight using {heapName}", $"expected 6, got {totWeight}", ref failed);
@@ -98,7 +96,7 @@ public static class PrimsTest
     //Tests Prim's on a random undirected graph
     //Each possible edge includes a fixed probability and random weight
     private static void RunRandomGraphScenario<THeap>(ref int testNumber, ref int passed, ref int failed, string heapName)
-           where THeap : IHeap<Prims.KeyedVertex>, new()
+           where THeap : IHeap<Graph<string>.KeyedVertex>, new()
     {
         MetricsHandler.StartTest();
         var rValues = new (int nodes, double p)[]
@@ -115,7 +113,7 @@ public static class PrimsTest
 
             int edgeCount = parent.Count(x => x != -1);
 
-            if(edgeCount != n - 1) 
+            if (edgeCount != n - 1)
             {
                 Fail(ref testNumber, $"Random graph n = {n}, p={p} using {heapName}", $"expected {n - 1} edges, got {edgeCount}", ref failed);
             }
@@ -126,7 +124,7 @@ public static class PrimsTest
     //Tests Prim's on various grid graphs
     //Each node is connected to (if possible) it's right and bottom neighbors
     private static void RunGridGraphScenarios<THeap>(ref int testNumber, ref int passed, ref int failed, string heapName)
-       where THeap : IHeap<Prims.KeyedVertex>, new()
+       where THeap : IHeap<Graph<string>.KeyedVertex>, new()
     {
         MetricsHandler.StartTest();
         var gridSizes = new (int rows, int cols)[]
@@ -154,7 +152,7 @@ public static class PrimsTest
     //Tests Prim's on a simple worst-case graph
     //this graph acts as a stress test for the heap's decrease-key
     private static void RunWorstCaseScenario<THeap>(ref int testNumber, ref int passed, ref int failed, string heapName)
-       where THeap : IHeap<Prims.KeyedVertex>, new()
+       where THeap : IHeap<Graph<string>.KeyedVertex>, new()
     {
         MetricsHandler.StartTest();
         int n = 8;
@@ -170,7 +168,7 @@ public static class PrimsTest
             Fail(ref testNumber, $"Simple worst-case MST edge count using {heapName}", $"expected {n - 1}, got {edgeCount}", ref failed);
             return;
         }
-        if(totWeight <= 0)
+        if (totWeight <= 0)
         {
             Fail(ref testNumber, $"Simple worst-case MST weight using {heapName}", $"weight should be positive, got {totWeight}", ref failed);
             return;

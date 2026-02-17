@@ -12,12 +12,19 @@ public static class DijkstraTest
         var passed = 0;
         var failed = 0;
 
-        RunBasicScenario(ref testNumber, ref passed, ref failed);
-        RunWorstCaseLinearChain(ref testNumber, ref passed, ref failed);
-        RunBestCaseSingleEdge(ref testNumber, ref passed, ref failed);
-        RunComplexMultiPathGraph(ref testNumber, ref passed, ref failed);
-        RunDenseGraphWithCycles(ref testNumber, ref passed, ref failed);
-        RunLargeGraphLayered(ref testNumber, ref passed, ref failed);
+        RunBasicScenario(ref testNumber, ref passed, ref failed, new FibonacciHeap<Graph<string>.KeyedVertex>());
+        RunWorstCaseLinearChain(ref testNumber, ref passed, ref failed, new FibonacciHeap<Graph<string>.KeyedVertex>());
+        RunBestCaseSingleEdge(ref testNumber, ref passed, ref failed, new FibonacciHeap<Graph<string>.KeyedVertex>());
+        RunComplexMultiPathGraph(ref testNumber, ref passed, ref failed, new FibonacciHeap<Graph<string>.KeyedVertex>());
+        RunDenseGraphWithCycles(ref testNumber, ref passed, ref failed, new FibonacciHeap<Graph<string>.KeyedVertex>());
+        RunLargeGraphLayered(ref testNumber, ref passed, ref failed, new FibonacciHeap<Graph<string>.KeyedVertex>());
+
+        RunBasicScenario(ref testNumber, ref passed, ref failed, new PairingHeap<Graph<string>.KeyedVertex>());
+        RunWorstCaseLinearChain(ref testNumber, ref passed, ref failed, new PairingHeap<Graph<string>.KeyedVertex>());
+        RunBestCaseSingleEdge(ref testNumber, ref passed, ref failed, new PairingHeap<Graph<string>.KeyedVertex>());
+        RunComplexMultiPathGraph(ref testNumber, ref passed, ref failed, new PairingHeap<Graph<string>.KeyedVertex>());
+        RunDenseGraphWithCycles(ref testNumber, ref passed, ref failed, new PairingHeap<Graph<string>.KeyedVertex>());
+        RunLargeGraphLayered(ref testNumber, ref passed, ref failed, new PairingHeap<Graph<string>.KeyedVertex>());
 
         Console.WriteLine();
         Console.WriteLine($"Results: {passed} passed, {failed} failed.");
@@ -43,7 +50,7 @@ public static class DijkstraTest
         MetricsHandler.StartTest();
     }
 
-    private static void RunBasicScenario(ref int testNumber, ref int passed, ref int failed)
+    private static void RunBasicScenario(ref int testNumber, ref int passed, ref int failed, IHeap<Graph<string>.KeyedVertex> heap)
     {
         MetricsHandler.StartTest();
         var nodes = new[] { "A", "B", "C", "D" };
@@ -53,8 +60,6 @@ public static class DijkstraTest
         g.AddEdge("B", "C", 2);
         g.AddEdge("A", "D", 4);
         g.AddEdge("D", "C", 1);
-
-        var heap = new FibonacciHeap<Dijkstra.KeyedVertex>();
 
         try
         {
@@ -75,7 +80,7 @@ public static class DijkstraTest
                 Fail(ref testNumber, "Shortest distance A->C is 3", $"expected 3, got {distC}", ref failed);
                 return;
             }
-            Pass(ref testNumber, "Shortest distance A->C is 3", ref passed);
+            Pass(ref testNumber, $"({heap.GetType().Name}) Shortest distance A->C is 3", ref passed);
 
             // Reconstruct path A -> ... -> C
             var path = Dijkstra.ReconstructPath(prev, "A", "C");
@@ -85,7 +90,7 @@ public static class DijkstraTest
                 Fail(ref testNumber, "Reconstructed path A->C is A -> B -> C", $"got '{pathStr}'", ref failed);
                 return;
             }
-            Pass(ref testNumber, "Reconstructed path A->C is A -> B -> C", ref passed);
+            Pass(ref testNumber, $"({heap.GetType().Name}) Reconstructed path A->C is A -> B -> C", ref passed);
         }
         catch (Exception ex)
         {
@@ -93,7 +98,7 @@ public static class DijkstraTest
         }
     }
 
-    private static void RunWorstCaseLinearChain(ref int testNumber, ref int passed, ref int failed)
+    private static void RunWorstCaseLinearChain(ref int testNumber, ref int passed, ref int failed, IHeap<Graph<string>.KeyedVertex> heap)
     {
         // Worst case: Linear chain A->B->C->D->E->F where algorithm must relax all edges
         MetricsHandler.StartTest();
@@ -107,8 +112,6 @@ public static class DijkstraTest
         g.AddEdge("D", "E", 1);
         g.AddEdge("E", "F", 1);
 
-        var heap = new FibonacciHeap<Dijkstra.KeyedVertex>();
-
         try
         {
             var (distance, previous) = Dijkstra.ShortestPathsFrom(g, "A", heap);
@@ -119,7 +122,7 @@ public static class DijkstraTest
                 Fail(ref testNumber, "Linear chain: Distance A->F is 5", $"expected 5, got {value}", ref failed);
                 return;
             }
-            Pass(ref testNumber, "Linear chain: Distance A->F is 5", ref passed);
+            Pass(ref testNumber, $"({heap.GetType().Name}) Linear chain: Distance A->F is 5", ref passed);
 
             // Verify path reconstruction
             var path = Dijkstra.ReconstructPath(previous, "A", "F");
@@ -129,7 +132,7 @@ public static class DijkstraTest
                 Fail(ref testNumber, "Linear chain: Path A->F is A -> B -> C -> D -> E -> F", $"got '{pathStr}'", ref failed);
                 return;
             }
-            Pass(ref testNumber, "Linear chain: Path reconstruction correct", ref passed);
+            Pass(ref testNumber, $"({heap.GetType().Name}) Linear chain: Path reconstruction correct", ref passed);
         }
         catch (Exception ex)
         {
@@ -137,7 +140,7 @@ public static class DijkstraTest
         }
     }
 
-    private static void RunBestCaseSingleEdge(ref int testNumber, ref int passed, ref int failed)
+    private static void RunBestCaseSingleEdge(ref int testNumber, ref int passed, ref int failed, IHeap<Graph<string>.KeyedVertex> heap)
     {
         // Best case: Direct edge from source to all other nodes
         MetricsHandler.StartTest();
@@ -149,8 +152,6 @@ public static class DijkstraTest
         g.AddEdge("S", "B", 20);
         g.AddEdge("S", "C", 15);
 
-        var heap = new FibonacciHeap<Dijkstra.KeyedVertex>();
-
         try
         {
             var (distance, previous) = Dijkstra.ShortestPathsFrom(g, "S", heap);
@@ -161,14 +162,14 @@ public static class DijkstraTest
                 Fail(ref testNumber, "Direct edges: Distance S->A is 10", $"expected 10, got {distA}", ref failed);
                 return;
             }
-            Pass(ref testNumber, "Direct edges: Distance S->A is 10", ref passed);
+            Pass(ref testNumber, $"({heap.GetType().Name}) Direct edges: Distance S->A is 10", ref passed);
 
             if (!distance.TryGetValue("C", out long distC) || distC != 15)
             {
                 Fail(ref testNumber, "Direct edges: Distance S->C is 15", $"expected 15, got {distC}", ref failed);
                 return;
             }
-            Pass(ref testNumber, "Direct edges: Distance S->C is 15", ref passed);
+            Pass(ref testNumber, $"({heap.GetType().Name}) Direct edges: Distance S->C is 15", ref passed);
         }
         catch (Exception ex)
         {
@@ -176,7 +177,7 @@ public static class DijkstraTest
         }
     }
 
-    private static void RunComplexMultiPathGraph(ref int testNumber, ref int passed, ref int failed)
+    private static void RunComplexMultiPathGraph(ref int testNumber, ref int passed, ref int failed, IHeap<Graph<string>.KeyedVertex> heap)
     {
         // Intermediate case: Multiple paths to destination, requires choosing optimal
         //        1     3
@@ -196,8 +197,6 @@ public static class DijkstraTest
         g.AddEdge("B", "D", 3);
         g.AddEdge("C", "D", 4);
 
-        var heap = new FibonacciHeap<Dijkstra.KeyedVertex>();
-
         try
         {
             var (distance, previous) = Dijkstra.ShortestPathsFrom(g, "A", heap);
@@ -208,7 +207,7 @@ public static class DijkstraTest
                 Fail(ref testNumber, "Multi-path: Distance A->D is 4", $"expected 4, got {distD}", ref failed);
                 return;
             }
-            Pass(ref testNumber, "Multi-path: Distance A->D is 4", ref passed);
+            Pass(ref testNumber, $"({heap.GetType().Name}) Multi-path: Distance A->D is 4", ref passed);
 
             // Verify optimal path chosen
             var path = Dijkstra.ReconstructPath(previous, "A", "D");
@@ -218,7 +217,7 @@ public static class DijkstraTest
                 Fail(ref testNumber, "Multi-path: Optimal path is A -> B -> D", $"got '{pathStr}'", ref failed);
                 return;
             }
-            Pass(ref testNumber, "Multi-path: Optimal path chosen correctly", ref passed);
+            Pass(ref testNumber, $"({heap.GetType().Name}) Multi-path: Optimal path chosen correctly", ref passed);
 
             // Verify distance to C
             if (!distance.TryGetValue("C", out long distC) || distC != 2)
@@ -226,7 +225,7 @@ public static class DijkstraTest
                 Fail(ref testNumber, "Multi-path: Distance A->C is 2", $"expected 2, got {distC}", ref failed);
                 return;
             }
-            Pass(ref testNumber, "Multi-path: Distance A->C calculated correctly", ref passed);
+            Pass(ref testNumber, $"({heap.GetType().Name}) Multi-path: Distance A->C calculated correctly", ref passed);
         }
         catch (Exception ex)
         {
@@ -234,7 +233,7 @@ public static class DijkstraTest
         }
     }
 
-    private static void RunDenseGraphWithCycles(ref int testNumber, ref int passed, ref int failed)
+    private static void RunDenseGraphWithCycles(ref int testNumber, ref int passed, ref int failed, IHeap<Graph<string>.KeyedVertex> heap)
     {
         // Intermediate case: Dense graph with cycles and multiple paths
         //     2       5
@@ -260,8 +259,6 @@ public static class DijkstraTest
         g.AddEdge("E", "C", 4);
         g.AddEdge("D", "A", 7); // Creates cycle
 
-        var heap = new FibonacciHeap<Dijkstra.KeyedVertex>();
-
         try
         {
             var (distance, previous) = Dijkstra.ShortestPathsFrom(g, "A", heap);
@@ -273,7 +270,7 @@ public static class DijkstraTest
                 Fail(ref testNumber, "Dense graph: Distance A->C is 7", $"expected 7, got {distC}", ref failed);
                 return;
             }
-            Pass(ref testNumber, "Dense graph: Distance A->C is 7", ref passed);
+            Pass(ref testNumber, $"({heap.GetType().Name}) Dense graph: Distance A->C is 7", ref passed);
 
             // Check distance to E
             if (!distance.TryGetValue("E", out long distE) || distE != 4)
@@ -281,7 +278,7 @@ public static class DijkstraTest
                 Fail(ref testNumber, "Dense graph: Distance A->E is 4", $"expected 4, got {distE}", ref failed);
                 return;
             }
-            Pass(ref testNumber, "Dense graph: Distance A->E is 4", ref passed);
+            Pass(ref testNumber, $"({heap.GetType().Name}) Dense graph: Distance A->E is 4", ref passed);
 
             // Check distance to D (should be 1 - direct edge)
             if (!distance.TryGetValue("D", out long distD) || distD != 1)
@@ -289,7 +286,7 @@ public static class DijkstraTest
                 Fail(ref testNumber, "Dense graph: Distance A->D is 1", $"expected 1, got {distD}", ref failed);
                 return;
             }
-            Pass(ref testNumber, "Dense graph: Distance A->D is 1", ref passed);
+            Pass(ref testNumber, $"({heap.GetType().Name}) Dense graph: Distance A->D is 1", ref passed);
         }
         catch (Exception ex)
         {
@@ -297,7 +294,7 @@ public static class DijkstraTest
         }
     }
 
-    private static void RunLargeGraphLayered(ref int testNumber, ref int passed, ref int failed)
+    private static void RunLargeGraphLayered(ref int testNumber, ref int passed, ref int failed, IHeap<Graph<string>.KeyedVertex> heap)
     {
         // Large graph with 25 nodes (5 layers of 5 nodes each)
         // Layer structure: Each layer fully connects to next layer
@@ -338,8 +335,6 @@ public static class DijkstraTest
             }
         }
 
-        var heap = new FibonacciHeap<Dijkstra.KeyedVertex>();
-
         try
         {
             var (distance, previous) = Dijkstra.ShortestPathsFrom(g, "A0", heap);
@@ -350,7 +345,7 @@ public static class DijkstraTest
                 Fail(ref testNumber, "Large graph (25 nodes): Distance A0->E0 is 4", $"expected 4, got {distE0}", ref failed);
                 return;
             }
-            Pass(ref testNumber, "Large graph (25 nodes): Distance A0->E0 is 4", ref passed);
+            Pass(ref testNumber, $"({heap.GetType().Name}) Large graph (25 nodes): Distance A0->E0 is 4", ref passed);
 
             // Path from A0 to E4: diagonal + 4 steps right = 1+2+3+4+5 = 15 (or other paths)
             // Actually: A0->B0(1)->C0(1)->D0(1)->E0(1)->E4(4) = 8 or
@@ -361,7 +356,7 @@ public static class DijkstraTest
                 Fail(ref testNumber, "Large graph (25 nodes): Distance A0->B0 is 1", $"expected 1, got {distB0}", ref failed);
                 return;
             }
-            Pass(ref testNumber, "Large graph (25 nodes): Distance A0->B0 is 1", ref passed);
+            Pass(ref testNumber, $"({heap.GetType().Name}) Large graph (25 nodes): Distance A0->B0 is 1", ref passed);
 
             // Check intermediate layer nodes
             if (!distance.TryGetValue("C0", out long distC0) || distC0 != 2)
@@ -369,7 +364,7 @@ public static class DijkstraTest
                 Fail(ref testNumber, "Large graph (25 nodes): Distance A0->C0 is 2", $"expected 2, got {distC0}", ref failed);
                 return;
             }
-            Pass(ref testNumber, "Large graph (25 nodes): Distance A0->C0 is 2", ref passed);
+            Pass(ref testNumber, $"({heap.GetType().Name}) Large graph (25 nodes): Distance A0->C0 is 2", ref passed);
 
             // Check a corner node (A0 to E4)
             if (!distance.TryGetValue("E4", out long distE4))
@@ -377,7 +372,7 @@ public static class DijkstraTest
                 Fail(ref testNumber, "Large graph (25 nodes): Distance to E4 exists", $"missing key 'E4'", ref failed);
                 return;
             }
-            Pass(ref testNumber, "Large graph (25 nodes): Distance A0->E4 is reachable", ref passed);
+            Pass(ref testNumber, $"({heap.GetType().Name}) Large graph (25 nodes): Distance A0->E4 is reachable", ref passed);
 
             // Verify path reconstruction works for a distant node
             var path = Dijkstra.ReconstructPath(previous, "A0", "D0");
@@ -386,7 +381,7 @@ public static class DijkstraTest
                 Fail(ref testNumber, "Large graph (25 nodes): Path reconstruction returns path to D0", $"got empty or single-node path", ref failed);
                 return;
             }
-            Pass(ref testNumber, "Large graph (25 nodes): Path reconstruction works for distant nodes", ref passed);
+            Pass(ref testNumber, $"({heap.GetType().Name}) Large graph (25 nodes): Path reconstruction works for distant nodes", ref passed);
         }
         catch (Exception ex)
         {

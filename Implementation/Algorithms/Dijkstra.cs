@@ -10,30 +10,6 @@ namespace Implementation.Algorithms;
 public static class Dijkstra
 {
     /// <summary>
-    /// Heap element for a vertex: (distance from source, vertex index).
-    /// Comparable by distance (then by index as a stable tiebreaker).
-    /// </summary>
-    public readonly struct KeyedVertex : IComparable<KeyedVertex>
-    {
-        public KeyedVertex(long distance, int vertex)
-        {
-            Distance = distance;
-            Vertex = vertex;
-        }
-
-        public long Distance { get; }
-        public int Vertex { get; }
-
-        public int CompareTo(KeyedVertex other)
-        {
-            int c = Distance.CompareTo(other.Distance);
-            return c != 0 ? c : Vertex.CompareTo(other.Vertex);
-        }
-
-        public override string ToString() => $"(v={Vertex}, d={Distance})";
-    }
-
-    /// <summary>
     /// Compute single-source shortest paths from <paramref name="source"/> to all nodes.
     /// Returns a distance map and a predecessor map (for path reconstruction).
     /// </summary>
@@ -45,7 +21,7 @@ public static class Dijkstra
     /// </param>
     /// <returns>(distanceByNode, previousByNode)</returns>
     public static (Dictionary<T, long> distance, Dictionary<T, T?> previous)
-        ShortestPathsFrom<T>(Graph<T> graph, T source, IHeap<KeyedVertex> heap)
+        ShortestPathsFrom<T>(Graph<T> graph, T source, IHeap<Graph<T>.KeyedVertex> heap)
     {
         ArgumentNullException.ThrowIfNull(graph);
         ArgumentNullException.ThrowIfNull(heap);
@@ -61,12 +37,12 @@ public static class Dijkstra
         dist[src] = 0;
 
         // Keep a heap node handle per vertex so we can call DecreaseKey efficiently.
-        var heapNodes = new Node<KeyedVertex>[n];
+        var heapNodes = new Node<Graph<T>.KeyedVertex>[n];
 
         // Build the heap with all vertices (classic Dijkstra variant with a mutable key).
         for (int i = 0; i < n; i++)
         {
-            heapNodes[i] = heap.Insert(new KeyedVertex(dist[i], i));  // Insert returns Node<T>
+            heapNodes[i] = heap.Insert(new Graph<T>.KeyedVertex(dist[i], i));  // Insert returns Node<T>
         }
 
         // Extract exactly n times (we inserted exactly n items).
@@ -85,7 +61,7 @@ public static class Dijkstra
                     prev[v] = u.Vertex;
 
                     // DecreaseKey to reflect shorter distance for v
-                    heap.DecreaseKey(heapNodes[v], new KeyedVertex(alt, v));  // decrease-key operation
+                    heap.DecreaseKey(heapNodes[v], new Graph<T>.KeyedVertex(alt, v));  // decrease-key operation
                 }
             }
         }
