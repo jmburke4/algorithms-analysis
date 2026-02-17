@@ -80,7 +80,7 @@ public class PairingHeap<T> : IHeap<T> where T : IComparable<T>
         Node<T> newNode = new Node<T>(newValue, false);
         Root = merge(Root, newNode);
         MetricsHandler.EndHeapOperation();
-        return Root;
+        return newNode;
     }
 
     /// <summary>
