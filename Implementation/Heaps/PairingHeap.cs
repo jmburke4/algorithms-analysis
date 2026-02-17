@@ -166,6 +166,20 @@ public class PairingHeap<T> : IHeap<T> where T : IComparable<T>
 
         updateNode.Value = newValue;
 
+        // Ensure update isn't root
+        if(updateNode == Root)
+        {
+            MetricsHandler.EndHeapOperation();
+            return;
+        }
+
+        // Double check to ensure no further issues
+        if (updateNode.Parent == null)
+        {
+            MetricsHandler.EndHeapOperation();
+            return; 
+        }
+
         // Check if heap is violated
         if(updateNode.Value.CompareTo(updateNode.Parent.Value) < 0)
         {
