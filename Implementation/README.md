@@ -67,6 +67,8 @@ All time is collected with the same metrics system with the same calls to avoid 
 
 Extract/Decrease time checks take place after a initial root != null check. However, since both heaps do the same checks, this is trivial and will not affect overall results. 
 
+**NOTE:** Whilst functionality will be the same, performance and metrics vary greatly across machines, and output may be different on the metrics end. All provided output was produced on the same machine with the same states to ensure continuity across tests.
+
 ## Heap Testing
 For both fibonacci and pair heap implementations, the same basic tests were performed in order to ensure they were functional, with multiple data types as well.
 
