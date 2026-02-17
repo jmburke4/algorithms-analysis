@@ -30,12 +30,21 @@ The project is broken into three areas. A heaps folder, a algorithms folder, and
 ```
 |- Heaps
 |   |- PairingHeaps.cs
+|   |- Node.cs
+|   |- IHeap.CS
 |   ⌞- FibonacciHeaps.cs
 |- Algorithms
-|   |- TestFiles
-|       |- 
-|       ⌞- complexFunctions.
-|   ⌞- 
+|   |- Dijkstra.cs
+|   |- Graph.cs
+|   ⌞- Prims.cs
+|- Tests
+|   |- DijkstraTest.cs
+|   |- FibHeapTest.cs
+|   |- GraphTest.cs
+|   |- PairHeapTest.cs
+|   |- PrimsTest.cs
+|   ⌞- TestOutputs
+|       ⌞- All Output Files (Markdowns)
 |- FibHeapTest.cs
 |- PairHeapTest.cs
 |- Program.cs
@@ -75,6 +84,16 @@ These tests are:
 13. Delete min with many strings 
 
 *Note:* To see test output, see `HeapTestOutput.md` file.
+
+## Graph Testing
+
+
+*Note:* To see test output, see `GraphTestOutput.md` file.
+
+## Algorithm Testing
+
+
+**Note:** To see test output, see `PrimsTestOutput.md` or `DijkstraTestOutput.md` files.
 
 # Theory Vs. Practice
 There are a few key reasons why the theory of these heaps do not necessarily align with the reality.
