@@ -35,9 +35,12 @@ public static class PrimsTest
 
     private static void Pass(ref int testNumber, string description, ref int passed)
     {
+        MetricsHandler.EndTest();
         testNumber++;
         Console.WriteLine($"Test {testNumber} - {description} - Passed");
         passed++;
+        MetricsHandler.PrintMetrics();
+        MetricsHandler.StartTest();
     }
 
     private static void Fail(ref int testNumber, string description, string reason, ref int failed)
@@ -45,12 +48,14 @@ public static class PrimsTest
         testNumber++;
         Console.WriteLine($"Test {testNumber} - {description} - FAILED: {reason}");
         failed++;
+        MetricsHandler.StartTest();
     }
 
     //Simple undirected graph, checks MST total weight and edge count
     private static void RunBasicPrimScenario<THeap>(ref int testNumber, ref int passed, ref int failed, string heapName)
         where THeap : IHeap<Prims.KeyedVertex>, new()
     {
+        MetricsHandler.StartTest();
         var nodes = new[] { "A", "B", "C", "D" };
         var g = new Graph<string>(nodes);
 
@@ -95,6 +100,7 @@ public static class PrimsTest
     private static void RunRandomGraphScenario<THeap>(ref int testNumber, ref int passed, ref int failed, string heapName)
            where THeap : IHeap<Prims.KeyedVertex>, new()
     {
+        MetricsHandler.StartTest();
         var rValues = new (int nodes, double p)[]
         {
             (10, 0.3), (25, 0.5), (20, 0.7), (45, 0.2)
@@ -122,6 +128,7 @@ public static class PrimsTest
     private static void RunGridGraphScenarios<THeap>(ref int testNumber, ref int passed, ref int failed, string heapName)
        where THeap : IHeap<Prims.KeyedVertex>, new()
     {
+        MetricsHandler.StartTest();
         var gridSizes = new (int rows, int cols)[]
         {
             (2,2), (4,4), (5,5), (7,7)
@@ -149,6 +156,7 @@ public static class PrimsTest
     private static void RunWorstCaseScenario<THeap>(ref int testNumber, ref int passed, ref int failed, string heapName)
        where THeap : IHeap<Prims.KeyedVertex>, new()
     {
+        MetricsHandler.StartTest();
         int n = 8;
         var graph = CreateWorstCaseGraph(n);
         var heap = new THeap();
@@ -171,6 +179,7 @@ public static class PrimsTest
     }
     public static Graph<string> CreateGridGraph(int rows, int cols)
     {
+        MetricsHandler.StartTest();
         var nodes = new List<string>();
         for (int i = 0; i < rows; i++)
         {
@@ -202,6 +211,7 @@ public static class PrimsTest
 
     public static Graph<string> CreateRandomGraph(int numNodes, double edgeProb)
     {
+        MetricsHandler.StartTest();
         var nodes = new List<string>();
         for (int i = 0; i < numNodes; i++)
         {
@@ -227,6 +237,7 @@ public static class PrimsTest
 
     public static Graph<string> CreateWorstCaseGraph(int numNodes)
     {
+        MetricsHandler.StartTest();
         var nodes = new List<string>();
         for (int i = 0; i < numNodes; i++)
         {
