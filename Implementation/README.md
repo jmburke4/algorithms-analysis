@@ -5,6 +5,8 @@
 **Jackson Burke - jmburke4@crimson.ua.edu**
 
 **Christian Lindner - calindner@crimson.ua.edu**
+
+**Ed Page - epage1@crimson.ua.edu**
 This file overviews the Algorithms Analysis project for CS-470.
 
 This project was made with C#. In order to run this program, please ensure that `.NET 8.0 SDK` is installed on your machine. To verify installation, in cmd, enter:
