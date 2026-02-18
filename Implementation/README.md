@@ -4,6 +4,7 @@
 
 **Jackson Burke - jmburke4@crimson.ua.edu**
 
+**Christian Lindner - calindner@crimson.ua.edu**
 This file overviews the Algorithms Analysis project for CS-470.
 
 This project was made with C#. In order to run this program, please ensure that `.NET 8.0 SDK` is installed on your machine. To verify installation, in cmd, enter:
@@ -122,6 +123,17 @@ We found, consistently across all operations and algorithms, that pair heaps pro
 As such, pair heaps seem to be the clear winner in practicality whereas fibonacci heaps remain the victor on the theoretical end.
 
 # Discussion
+
+## Practical Analysis - Fibonacci vs Pairing Heaps
+The Fibonacci Heap is a data structure praised for its quick Insertion (O(1)), Decrease Key (O(1)), and Extract-min (O(log n)) operations, this allows for theoretical improvements of algorithms that require any of these operations such as Prim and Dijkstra's algorithms. 
+
+Fibonacci Heaps get their theoretical advantage over other heaps in Prim and Dijkstra's algorithm (for dense graphs) because they guarantee a strictly O(1) amortized cost for the Decrease Key operation, whereas other heaps have a lower bound above that constant time. This means that Fibonacci heaps are mathematically the superior choice for dense graphs that utilize algorithms involving frequent edge relaxations.
+
+The reality of a Fibonacci heap implementation is that a lot of background work is done to ensure a valid heap structure throughout any series of operations. One example of this background work is maintaining multiple pointers (more than a Pairing heap) to track nodes and make cuts to the Heap. Keeping track of these pointers means more work for the heap as opposed to a simpler implementation which provides similar real-world performance. Another problem with practical implementations of Fibonacci heaps is that the nodes are scattered in memory, this can cause cache misses which ultimately slows down the program. Other sources of overhead are heap functions such as making cascading cuts and tree consolidation. These functions are hard to implement and are more complex than operations needed for other heaps.  This overhead may not seem like much, but the cumulative effect is significant.
+
+To test whether or not the aforementioned "background work" will truly a play a role in eliminating Fibonacci heaps from being a viable option as compared to more popularly used ones, is to compare it directly with a more popularly used one. In this case, Pairing heaps. The test results show that pairing heaps outperform the more complicated and theoretically better structure
+
+When implemented in practice, a Fibonacci heap does not provide the on-paper benefits because of several logistical issues. This is visible in the tests conducted under both Prim and Dijkstra's algorithm using both a Fibonacci and a Pairing heap structure.  The asymptotic optimality of the Fibonacci heap should outperform the Pairing heap, but our calculated compute time puts the Pairing heap ahead in our C# implementation.  
 
 ## Where does each Algorithm shine?
 
