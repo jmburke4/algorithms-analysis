@@ -110,6 +110,17 @@ Prim's algorithm is tested for correct computation of minimum spanning trees acr
 
 **Note:** To see test output, see `PrimsTestOutput.md` or `DijkstraTestOutput.md` files.
 
+## Results Analysis (Heaps)
+From the tests, the general concept that can be gathered is that pairing heaps are overall better.
+
+Fibonacci has several weaknesses:
+- High initial "warm up" of the heap due to doubly linked lists taking longer to insert and manage. 
+- Higher memory footprint due to 2 extra variables per node. This isn't as bad in this implementation as both heaps share the same Node class, but would be greater in difference. 
+
+We found, consistently across all operations and algorithms, that pair heaps provided faster overall execution time and speeds. On average, the pairing heap performs roughly 20% better than the fibonacci in overall runtime, whilst there are several instance of decrease key taking nearly twice the time for fibonacci heaps over pairing heaps. 
+
+As such, pair heaps seem to be the clear winner in practicality whereas fibonacci heaps remain the victor on the theoretical end.
+
 # Discussion
 
 ## Where does each Algorithm shine?
